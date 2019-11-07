@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 internal struct Employee {
     internal let name: String
@@ -60,7 +61,37 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         
-        // TODO: init data employe
+        let employee: Employee = Employee(name: "Wowo D", age: "20", position: "Software Engineer")
+        let dataEmployee: Observable<Employee> = Observable<Employee>.of(employee)
+        let disposeBag: DisposeBag = DisposeBag()
+        
+        dataEmployee
+            .map { "Name: \($0.name)" }
+            .subscribe(self.nameLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        dataEmployee
+            .map { "Age: \($0.age)" }
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { [weak self] age in
+                self?.ageLabel.text = age
+            })
+            .disposed(by: disposeBag)
+        
+//        dataEmployee
+//            .map { "Posiiton: \($0.position)" }
+//            .subscribe(self.positionLabel.rx.text)
+//            .disposed(by: disposeBag)
+        
+        searchTextInput.rx.text
+            .subscribe(self.positionLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        buttonSearch.rx.tap
+            .subscribe(onNext: { _ in
+                print("tap action")
+            }).disposed(by: disposeBag)
+
     }
     
     // MARK: Function setup view
