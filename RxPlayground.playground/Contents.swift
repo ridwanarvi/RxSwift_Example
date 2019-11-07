@@ -33,5 +33,6 @@ numberSubject.subscribe(onNext: { value in
 numberSubject.onNext("satu")
 print("wkwk - hihihi")
 numberSubject.onNext("dua")
+numberSubject.onError(NSError(domain: "error", code: 0, userInfo: nil))
 numberSubject.onCompleted()
-numberSubject.onNext("lima")
+numberSubject.onNext("lima") //not observed
